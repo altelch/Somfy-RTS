@@ -1,11 +1,11 @@
 #!/usr/bin/python
 #-------------------------------------------------------------------------------
-# Name:        BitBucketConverter.py
-# Purpose:     Generate 'B0' message from received 'B1' data.
+# Name:        Somfy-RTS.py (based on BitBucketConverter.py)
+# Purpose:     Decode received 'B1' data.
 #
-# Author:      gerardovf
+# Author:      altelch / gerardovf
 #
-# Created:     05/09/2018
+# Created:     28/01/2019
 #-------------------------------------------------------------------------------
 
 from optparse import OptionParser
@@ -15,17 +15,6 @@ from sys import exit
 from optparse import OptionParser
 from StringIO import StringIO
 from enum import IntEnum
-
-# Output:
-# Example: AAB035051412DE05C802D5017223A0012332232323323232322332323232322323323223233223322323323232323223323232232323233455
-# 0xAA: sync start
-# 0xB0: command
-# 0x35: len command (dec 53)
-# 0x05: bucket count
-# 0x14: repeats
-# buckets 0-4
-# data
-# 0x55: sync end
 
 def deobfuscate(frame):
   for i in range(6,0,-1):
