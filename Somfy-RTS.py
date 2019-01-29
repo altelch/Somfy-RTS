@@ -27,6 +27,14 @@ def deobfuscate(frame):
   print hex((frame[0]>>4) & 0xf), "  + ", hex((frame[0] & 0xf)), " ! ", hex((frame[1]>>4 & 0xf)), " ! ", hex((frame[1] & 0xf)), " !    ", hex((frame[2]<<8) + frame[3]), "   !       ", hex((frame[4]<<16) + (frame[5]<<8) + frame[6]), "      !"
   print("        +-------+-------+-------+-------+MSB----+----LSB+LSB----+-------+----MSB+")
 
+def checksum(frame):
+  cksum = 0
+  frame[1]=frame[1] & 0xf0
+  for i in range(0,7):
+    cksum = cksum ^ frame[i] ^ (frame[i] >> 4)
+  cksum = cksum & 0b1111
+  return cksum
+
 class ManchesterDecode:
   def init(self, nextBit, secondPulse):
     self.nextBit = nextBit
@@ -110,7 +118,8 @@ def main(szInpStr):
           pulse[i]="SWsync"
         if iValue > 25000:
           pulse[i]="InterFrameGap"
-        print("Bucket %d: %s (%d)" % (i, pulse[i], iValue)) #HK
+        if(options.debug):
+          print("Bucket %d: %s (%d)" % (i, pulse[i], iValue)) #HK
         szOutAux += strHex
     strHex = listOfElem[iNbrOfBuckets + 3]
     szOutAux += strHex
@@ -170,8 +179,9 @@ def main(szInpStr):
       if(options.debug):
         print("%d: %s" % (i,States(state)))
 
-    print(bin(decode.get_bitvector()))
-    print(hex(decode.get_bitvector()))
+    if(options.debug):
+      print(bin(decode.get_bitvector()))
+      print(hex(decode.get_bitvector()))
     number = decode.get_bitvector()
     frame = {}
     frame[0] = (number>>48) & 0xff
@@ -182,6 +192,8 @@ def main(szInpStr):
     frame[5] = (number>>8) & 0xff
     frame[6] = number & 0xff
     deobfuscate(frame)
+    if(options.debug):
+      print hex(checksum(frame))
 
 usage = "usage: %prog [options]"
 parser = OptionParser(usage=usage, version="%prog 0.2")
