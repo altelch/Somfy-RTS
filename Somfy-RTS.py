@@ -53,7 +53,7 @@ class ManchesterDecode:
 
   def addLongPulse(self):
     if not self.secondPulse:
-      return false
+      return False
     #print(self.nextBit),
     self.bitvec=self.bitvec+str(self.nextBit)
     self.nextBit = self.nextBit ^ 1
