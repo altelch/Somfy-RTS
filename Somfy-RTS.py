@@ -20,7 +20,7 @@ def deobfuscate(frame):
   for i in range(6,0,-1):
     frame[i] = frame[i] ^ frame[i-1]
   print("Group       A       B       C       D       F               G                    ")
-  print("Byte:       0H      0L      1H      1L      2       3       4       6       7    ")
+  print("Byte:       0H      0L      1H      1L      2       3       4       5       6    ")
   print("        +-------+-------+-------+-------+-------+-------+-------+-------+-------+")
   print("        ! 0xA   + R-KEY ! C M D ! C K S !  Rollingcode  ! Remote Handheld Addr. !")
   print("        !"),
